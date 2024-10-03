@@ -150,3 +150,16 @@ gwy_trash_wheel=
 gwy_trash_wheel
 ```
 
+### Combine All Cleaned Datasets
+
+Finally, we use the bind_rows() function to combine the three cleaned datasets (mr_trash_wheel, pro_trash_wheel, and gwy_trash_wheel) into a single tidy dataset called trash_tidy. This operation concatenates the rows from each dataset in order, forming a comprehensive table that contains all Trash Wheel data, making it easier for subsequent analysis and processing.
+
+```{r}
+trash_tidy=
+  bind_rows(mr_trash_wheel, pro_trash_wheel, gwy_trash_wheel)
+
+trash_tidy
+```
+
+The combined dataset contains a total of `r nrow(trash_tidy)` observations, representing data collected from three different Trash Wheels: Mr. Trash Wheel, Professor Trash Wheel, and Gwynnda. Key variables in this dataset include date, dumpsters, weight_tons, sports_balls, and source, which provide insights into the amount and type of trash collected. From the available data, the total weight of trash collected by Professor Trash Wheel is **`r sum(trash_tidy$weight_tons[trash_tidy$source == "Professor"], na.rm = TRUE)`** tons. Additionally, during June 2022, Gwynnda collected a total of **`r sum(trash_tidy$cigarette_butts[trash_tidy$source == "Gwynnda" & trash_tidy$month == "June" & trash_tidy$year==2022]) |> as.integer()`** cigarette butts, illustrating the impact of trash collection efforts in the community.
+
