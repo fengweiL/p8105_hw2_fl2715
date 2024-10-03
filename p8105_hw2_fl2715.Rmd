@@ -247,3 +247,22 @@ diff_results_bakers
 
 Now the results are the same as we expected. So we complete checking for completeness and correctness across datasets and move to merging step.
 
+### Merge Datasets
+
+We  merge the datasets into one final, tidy dataset using `left_join()` on the tibble `results_df`, ensuring that all information about bakers, bakes, and results is included.
+
+```{r}
+final_df = results_df |> 
+  left_join(bakes_df, by = c("series", "episode", "baker"))  |> 
+  left_join(bakers_df, by = c("series", "baker"))
+
+final_df = final_df  |> 
+  arrange(series, episode, baker)
+
+write_csv(final_df, "./gbb_datasets/final_bakeoff_data.csv")
+
+final_df
+```
+
+The final dataset contains information on each baker, the bakes they completed, and their performance across episodes and seasons. The dataset is well-organized with series, episode, baker, and performance details like technical rankings and Star Baker awards. It contains `r nrow(final_df)` rows and `r ncol(final_df)`columns. This will allow us to analyze patterns, such as consistent winners or surprises in the results.
+
