@@ -4,3 +4,8 @@ author: "Fengwei Lei"
 output: github_document
 ---
 
+## Load Necessary Library
+```{r load_libraries}
+library(tidyverse)
+library(readxl)
+```
