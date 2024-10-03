@@ -108,3 +108,24 @@ mr_trash_wheel=
 mr_trash_wheel
 ```
 
+### Read and Clean Professor Trash Wheel Data
+
+Next code chunk reads the Professor Trash Wheel sheet from the Excel file, also starting from the second row. Apart form the similar steps in above manipulation, in the `mutate()` function, a new column sports_balls is created and set to 0, as this data source does not have corresponding sports ball data. Additionally, the year column is converted to character type to maintain consistency with Mr. Trash Wheel dataset, and a source column is added to indicate that the data comes from “Professor.”
+
+```{r}
+pro_trash_wheel=
+  read_excel(
+    "./202409 Trash Wheel Collection Data.xlsx",
+    sheet="Professor Trash Wheel",
+    range="A2:M123") |> 
+  janitor::clean_names() |> 
+  filter(!is.na(dumpster)) |> 
+  mutate(
+    sports_balls = 0,
+    year = as.character(year),
+    source="Professor"
+  )
+
+pro_trash_wheel
+```
+
