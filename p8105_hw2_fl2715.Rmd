@@ -9,3 +9,23 @@ output: github_document
 library(tidyverse)
 library(readxl)
 ```
+
+## Problem 1
+
+```{r}
+nyc_df=
+  read_csv(
+    "./NYC_Transit_Subway_Entrance_And_Exit_Data.csv",
+    na = c("NA", ".", "")) |> 
+  janitor::clean_names() |> 
+  select(
+    line, station_name, station_latitude, station_longitude, 
+    starts_with("route"), entry, exit_only, vending, entrance_type, 
+    ada) |> 
+  mutate(entry = ifelse(entry == "YES", TRUE, FALSE))
+```
+
+The above dataset contains information from `NYC_Transit_Subway_Entrance_And_Exit_Data.csv`. It includes variables such as subway line, station name, latitude, longitude, routes served, entry status, exit-only status, vending availability, entrance type, and ADA compliance. Data cleaning steps involved handling missing values, cleaning column names, selecting relevant variables, and converting the entry variable from “YES”/“NO” to a logical format (TRUE/FALSE). The resulting dataset has `r nrow(nyc_df)` rows and `r ncol(nyc_df)` columns.
+
+But these data is not fully “tidy”: both the route number and route should be treated as variables. To make the dataset tidy, we need to reshape the route variables from wide to long format. This restructuring is helpful when analyzing specific routes.
+
