@@ -29,3 +29,29 @@ The above dataset contains information from `NYC_Transit_Subway_Entrance_And_Exi
 
 But these data is not fully “tidy”: both the route number and route should be treated as variables. To make the dataset tidy, we need to reshape the route variables from wide to long format. This restructuring is helpful when analyzing specific routes.
 
+The below code shows that the number of distinct stations identified both by name and line, where we use the `distinct()` fuction.
+
+```{r}
+nyc_df |> 
+  select(station_name, line) |> 
+  distinct()
+```
+
+The following code chunk illustrates the number of stations which are ADA compliant. Firstly, we filter the rows where `ada == TRUE`. And we do the similar steps to the above code chunk.
+
+```{r}
+nyc_df |> 
+  filter(ada == TRUE) |> 
+  select(station_name, line) |> 
+  distinct()
+```
+
+The following code chunk shows the proportion of station entrances / exits without vending allow entrance. We firstly filter the rows where there is no vending. And since the variable `entry` is a logical variable, we could compute the mean for calculating proportion.
+
+```{r}
+nyc_df |> 
+  filter(vending == "NO") |> 
+  pull(entry) |> 
+  mean()
+```
+
