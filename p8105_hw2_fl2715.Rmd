@@ -55,3 +55,34 @@ nyc_df |>
   mean()
 ```
 
+Finally, we compute the number of distinct stations that serve the A train, and that are ADA compliant. To reformat the data successfully, we firstly convert the variables `route8`, `route9`, `route10` and `route11` into character type, since they were double type before. After that, we tidy the data with converting `route` from wide to long format. And then, we use `filter()`, `select()`, `distinct()` function to find the regarding results (similar to the above steps).
+```{r}
+nyc_df=
+  nyc_df |> 
+  mutate(
+    route8=as.character(route8),
+    route9=as.character(route9),
+    route10=as.character(route10),
+    route11=as.character(route11))
+
+nyc_df |> 
+  pivot_longer(
+    route1:route11,
+    names_to = "route_num",
+    values_to = "route") |> 
+  filter(route == "A") |> 
+  select(station_name, line) |> 
+  distinct()
+
+nyc_df |> 
+  pivot_longer(
+    route1:route11,
+    names_to = "route_num",
+    values_to = "route") |> 
+  filter(route == "A", ada == TRUE) |> 
+  select(station_name, line) |> 
+  distinct()
+```
+
+From the above reformat data, we can see that there are **60** distinct stations serve the A train. And **17** Of the stations that serve the A train and are ADA compliant.
+
