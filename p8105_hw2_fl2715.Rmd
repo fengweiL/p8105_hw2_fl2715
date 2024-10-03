@@ -189,3 +189,61 @@ results_df=
   janitor::clean_names()
 ```
 
+### Data Cleaning Process
+
+First, we inspect the data for completeness and correctness by viewing these three individual datasets and checking for missing or inconsistent data. We use `anti_join()` to examine whether there exist any mismatching between the datasets.
+
+- Compare `results_df` and `bakes_df`
+
+```{r}
+diff_results_bakes=anti_join(results_df, bakes_df, by=c("series", "episode", "baker"))
+diff_results_bakes
+```
+
+From the above results, we find that there are `r nrow(diff_results_bakes)` rows, which means that 596 rows in `results_df` but not in `bakes_df` according to variables "series","episode", "baker". But the difference of the rows between `results_df` and `bakes_df` is `r nrow(results_df)` - `r nrow(bakes_df)`= 588, which is not equal to 596. That means there are some tricky rows in `bakes_df` but not in `results_df` for the variables combination of "series","episode", and "baker".
+
+- Compare `bakes_df` and `bakers_df`
+
+```{r}
+diff_bakes_bakers=anti_join(bakes_df, bakers_df, by = "baker")
+diff_bakes_bakers
+```
+
+Interestingly, for the difference of the variable `baker` between `bakes_df` and `bakers_df`, we find there are some stranger names **"Jo"** in `bakes_df`. That might be a wrong recording information. So we need to convert **"Jo"** into **Jo**.
+
+- Compare `results_df` and `bakers_df`
+
+```{r}
+diff_results_bakers=anti_join(results_df, bakers_df, by = "baker")
+diff_results_bakers
+```
+
+The above results shows that there is one baker named "Joanne", who exits in `results_df` but not in `bakers_df`. Besides, we examine that Joanne does not exist in `bakes_df` neither. 
+___It is a reasonable explanation that **Joanne** and **Jo** is exactly the same person!___
+
+So we now clean the bakers' names in `bakes_df` and `results_df`!
+We convert **"Jo"** into **Jo** in `bakes_df` and **Joanne** into **Jo** in `results_df` for consistency.
+
+```{r}
+bakes_df = bakes_df |>
+  mutate( baker = str_replace(baker, "\"Jo\"", "Jo"))
+
+results_df= results_df |> 
+  mutate(baker=str_replace(baker, "Joanne", "Jo"))
+```
+
+Now we check the differences and consistency of these three data sets after modifying the name.
+
+```{r}
+diff_results_bakes=anti_join(results_df, bakes_df, by=c("series", "episode", "baker"))
+diff_results_bakes
+
+diff_bakes_bakers=anti_join(bakes_df, bakers_df, by = "baker")
+diff_bakes_bakers
+
+diff_results_bakers=anti_join(results_df, bakers_df, by = "baker")
+diff_results_bakers
+```
+
+Now the results are the same as we expected. So we complete checking for completeness and correctness across datasets and move to merging step.
+
