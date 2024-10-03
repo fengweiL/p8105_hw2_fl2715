@@ -129,3 +129,24 @@ pro_trash_wheel=
 pro_trash_wheel
 ```
 
+### Read and Clean Gwynnda Trash Wheel Data
+
+Similar steps are applied to Gwynnda Trash Wheel Data for the Gwynnda Trash Wheel sheet from the Excel file.
+
+```{r}
+gwy_trash_wheel=
+  read_excel(
+    "./202409 Trash Wheel Collection Data.xlsx",
+    sheet="Gwynnda Trash Wheel",
+    range="A2:L266") |> 
+  janitor::clean_names() |> 
+  filter(!is.na(dumpster)) |> 
+  mutate(
+    sports_balls = 0,
+    year = as.character(year),
+    source="Gwynnda"
+  )
+
+gwy_trash_wheel
+```
+
