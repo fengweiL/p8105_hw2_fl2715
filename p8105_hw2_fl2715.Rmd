@@ -86,3 +86,25 @@ nyc_df |>
 
 From the above reformat data, we can see that there are **60** distinct stations serve the A train. And **17** Of the stations that serve the A train and are ADA compliant.
 
+## Problem 2
+
+### Read and Clean Mr. Trash Wheel Data
+
+The following code block reads the Mr. Trash Wheel sheet from the Excel file, starting from the second row to skip the header. We use `janitor::clean_names()` to clean the column names. Then, we apply `filter()` to remove rows with missing values in the dumpster column, retaining only those that contain specific dumpster data. Next, we use `mutate()` to round the values in the sports_balls column to the nearest integer and convert them to integer type while adding a source column to indicate that the data comes from “Mr.”
+
+```{r}
+mr_trash_wheel=
+  read_excel(
+    "./202409 Trash Wheel Collection Data.xlsx",
+    sheet="Mr. Trash Wheel",
+    range="A2:N655") |> 
+  janitor::clean_names() |> 
+  filter(!is.na(dumpster)) |> 
+  mutate(
+    sports_balls = as.integer(round(sports_balls)),
+    source="Mr"
+  )
+
+mr_trash_wheel
+```
+
