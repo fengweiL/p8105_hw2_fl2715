@@ -299,3 +299,34 @@ But there are also some surprising results.
 
 **David (Season 10)**: David’s win in Season 10 is the biggest surprise. Steph was the Star Baker 4 times, including three consecutive wins in the middle of the season, making her the likely favorite. However, David, who never won Star Baker during the season, won the final.
 
+### Import and Clean Viewership Data
+
+Now, we import and clean the viewers.csv dataset to analyze the show’s viewership over time.
+
+```{r}
+viewers_df =
+  readr::read_csv(
+    "./gbb_datasets/viewers.csv",
+    na = c("NA", ".", ""))  |> 
+  janitor::clean_names()
+
+head(viewers_df, 10)
+```
+
+We calculate the average viewership for Season 1 and Season 5.
+
+```{r}
+avg_viewership_season1 = viewers_df  |> 
+  pull(series_1) |> 
+  mean(na.rm = TRUE)
+
+avg_viewership_season5 = viewers_df  |> 
+  pull(series_5) |> 
+  mean(na.rm = TRUE)
+
+avg_viewership_season1
+avg_viewership_season5
+```
+
+
+The average viewership for Season 1 was `r avg_viewership_season1`, while for Season 5, it was `r avg_viewership_season5`. The show’s viewership appears to have grown significantly as it gained popularity over the seasons.
